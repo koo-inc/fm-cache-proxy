@@ -1,0 +1,17 @@
+{
+  "port": 8080,
+  "expire": 691200,
+  "storage": {
+    "endPoint": "192.168.255.162",
+    "port": 9000,
+    "secure": false,
+    "accessKey": "OOTK0FUW5SEJ5BZCLVU1",
+    "secretKey": "WjZn9SaeFIMzkXYSe4HsHHau4snhFCks5ISEquxD",
+    "bucketName": "mybuckets",
+    "region": "us-east-1"
+  },
+  "agent": {
+    "secretKey": "abcdefghijklmnop",
+    "iv": "1234567890123456"
+  }
+}

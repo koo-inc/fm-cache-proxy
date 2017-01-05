@@ -2,10 +2,17 @@
   "name": "fmcp",
   "version": "1.0.0",
   "description": "freemind media cache proxy",
-  "main": "index.ts",
+  "main": "bin/main.js",
   "scripts": {
     "test": "run test"
   },
+  "bin": "bin/main.js",
   "author": "Tasuku Sumi",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.3",
+    "minio": "^3.0.0",
+    "request": "^2.79.0",
+    "zone.js": "^0.7.4"
+  }
 }
