@@ -1,10 +1,10 @@
-# fmcp
+# fm-cache-proxy
 Freemind Media Cache Proxy
 
 # Install
 
 ```
-npm i -g github:tasuku-s/fmcp
+npm i -g github:koo-inc/fm-cache-proxy
 ```
 
 # Usage

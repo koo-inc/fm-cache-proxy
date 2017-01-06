@@ -14,7 +14,7 @@ plugins {
 }
 
 
-project.version = '0.1'
+project.version = '0.1.0'
 project.group = 'jp.co.freemind'
 
 sourceCompatibility = '1.6'
@@ -52,7 +52,7 @@ bintray {
         name = 'fmcp-client'
         userOrg = 'koo-inc'
         licenses = ['MIT']
-        vcsUrl = 'https://github.com/tasuku-s/fmcp.git'
+        vcsUrl = 'https://github.com/koo-inc/fmcp.git'
         version {
             name = project.version
             desc = 'FMCP-Client 1.0 SNAPSHOT'
