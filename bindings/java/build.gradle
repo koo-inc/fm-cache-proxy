@@ -6,8 +6,16 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at https://docs.gradle.org/3.0/userguide/tutorial_java_projects.html
  */
+plugins {
+    id 'java'
+    id 'maven'
+    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.7.3'
+}
 
-apply plugin: 'java'
+
+project.version = '0.1'
+project.group = 'jp.co.freemind'
 
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
@@ -22,4 +30,34 @@ repositories {
 dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.5'
     testCompile 'junit:junit:4.12'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId project.group
+            artifactId project.name
+            version project.version
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    pkg {
+        repo = 'maven'
+        name = 'fmcp-client'
+        userOrg = 'koo-inc'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/tasuku-s/fmcp.git'
+        version {
+            name = project.version
+            desc = 'FMCP-Client 1.0 SNAPSHOT'
+            vcsTag = '1.0-SNAPSHOT'
+        }
+        publications = ['mavenJava']
+    }
 }
