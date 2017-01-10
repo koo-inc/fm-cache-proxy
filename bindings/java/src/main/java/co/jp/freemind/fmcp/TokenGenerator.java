@@ -27,7 +27,6 @@ public class TokenGenerator {
 
     public String getToken(Parameter param) {
         String src = param.toJson();
-        System.out.println(src);
         byte[] bytes;
         synchronized (cipher) {
             try {
@@ -48,15 +47,12 @@ public class TokenGenerator {
             Object result = encode.invoke(encoder, new Object[]{bytes});
             return new String((byte[]) result);
         } catch (Exception e1) {
-            e1.printStackTrace();
-
             try {
                 Object encoder = Class.forName("sun.misc.BASE64Encoder").newInstance();
                 Method encode = encoder.getClass().getMethod("encode", byte[].class);
                 Object result = encode.invoke(encoder, new Object[]{bytes});
                 return (String) result;
             } catch (Exception e2) {
-                e2.printStackTrace();
                 throw new RuntimeException(e2);
             }
         }

@@ -50,7 +50,7 @@ public class Parameter {
         private Builder() {}
 
         private String url;
-        private String method;
+        private String method = "GET";
         private Map<String, String> headers = new HashMap<String, String>();
         private Map<String, String> body = new HashMap<String, String>();
 
@@ -71,6 +71,9 @@ public class Parameter {
             return this;
         }
         public Parameter build() {
+            if (url == null) {
+                throw new IllegalStateException("url is required.");
+            }
             return new Parameter(url, method, headers, body);
         }
     }
