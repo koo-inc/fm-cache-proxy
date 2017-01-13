@@ -14,7 +14,7 @@ plugins {
 }
 
 
-project.version = '0.1.0'
+project.version = '0.2.0'
 project.group = 'jp.co.freemind'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
