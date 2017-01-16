@@ -1,11 +1,11 @@
-#! /usr/bin/bash
+#! /bin/bash
 
-if [ -n "$BINTRAY_USER" ]; do
+if [ -z "$BINTRAY_USER" ]; then
   echo "you should export BINTRAY_USER environment variable"
   exit 1
 fi
 
-if [ -n "$BINTRAY_KEY" ]; do
+if [ -z "$BINTRAY_KEY" ]; then
   echo "you should export BINTRAY_KEY environment variable"
   exit 1
 fi

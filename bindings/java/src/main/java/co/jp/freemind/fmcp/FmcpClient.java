@@ -27,15 +27,28 @@ public class FmcpClient {
     }
 
     public URL getUrl(Parameter param) throws IOException {
+        return getUrl("", param);
+    }
+
+    public URL getUrl(String fileName, Parameter param) throws IOException {
+        requireNonNull(fileName);
         requireNonNull(param);
 
         try {
-            return new URL(fmcpUrl + "?" + URLEncoder.encode(tokenGenerator.getToken(param), "UTF-8"));
+            String url = fmcpUrl;
+            if (!fileName.equals("")) {
+                url += (fmcpUrl.endsWith("/") ? "" : "/") + URLEncoder.encode(fileName, "UTF-8");
+            }
+            return new URL(url + "?" + URLEncoder.encode(getToken(param), "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getToken(Parameter param) {
+        return tokenGenerator.getToken(param);
     }
 
     public void put(Parameter param, InputStream file, long contentLength, String contentType) throws IOException {
