@@ -1,6 +1,6 @@
 {
   "port": 3000,
-  "expire": 10,
+  "expire": 60,
   "storage": {
     "endPoint": "192.168.255.162",
     "port": 9000,
@@ -12,6 +12,7 @@
   },
   "agent": {
     "secretKey": "abcdefghijklmnop",
-    "iv": "1234567890123456"
+    "iv": "1234567890123456",
+    "uniqueKeys": ["hoge"]
   }
 }
