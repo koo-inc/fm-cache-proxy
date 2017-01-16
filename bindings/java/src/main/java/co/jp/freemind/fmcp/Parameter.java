@@ -1,5 +1,7 @@
 package co.jp.freemind.fmcp;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +55,7 @@ public class Parameter {
         private String method = "GET";
         private Map<String, String> headers = new HashMap<String, String>();
         private Map<String, String> body = new HashMap<String, String>();
+        private Map<String, String> query = new HashMap<String, String>();
 
         public Builder url(String url) {
             this.url = url;
@@ -70,11 +73,40 @@ public class Parameter {
             this.body.put(key, value);
             return this;
         }
+        public Builder query(String key, String value) {
+            this.query.put(key, value);
+            return this;
+        }
         public Parameter build() {
             if (url == null) {
                 throw new IllegalStateException("url is required.");
             }
-            return new Parameter(url, method, headers, body);
+            StringBuilder urlBuilder = new StringBuilder(url);
+            if (url.contains("?")) {
+                if (!url.endsWith("&") && !url.endsWith("?")) {
+                    urlBuilder.append('&');
+                }
+            }
+            else {
+                urlBuilder.append('?');
+            }
+            for (Map.Entry<String, String> e : query.entrySet()) {
+                urlBuilder.append(encode(e.getKey())).append('=');
+                if (e.getValue() != null) {
+                    urlBuilder.append(e.getValue());
+                }
+                urlBuilder.append('&');
+            }
+            urlBuilder.delete(urlBuilder.length() - 1, urlBuilder.length());
+            return new Parameter(urlBuilder.toString(), method, headers, body);
+        }
+
+        private String encode(String str) {
+            try {
+                return URLEncoder.encode(str, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
