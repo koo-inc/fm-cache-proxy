@@ -10,6 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.activation.FileTypeMap;
 
@@ -19,7 +21,7 @@ public class FmcpClient {
     private final String fmcpUrl;
     private final TokenGenerator tokenGenerator;
 
-    FmcpClient(String fmcpUrl, String secretKey, String iv) {
+    private FmcpClient(String fmcpUrl, String secretKey, String iv) {
         this.fmcpUrl = fmcpUrl;
         this.tokenGenerator = new TokenGenerator(secretKey, iv);
     }
@@ -112,9 +114,57 @@ public class FmcpClient {
     }
 
 
-    private void requireNonNull(Object obj) {
+    private static void requireNonNull(Object obj) {
         if (obj == null) {
             throw new NullPointerException();
         }
     }
+
+
+    private static final Map<String, Map<String, Map<String, FmcpClient>>> cache = new ConcurrentHashMap<String, Map<String, Map<String, FmcpClient>>>();
+    public static FmcpClient getInstance(String fmcpUrl, String secretKey, String iv) {
+        requireNonNull(fmcpUrl);
+        requireNonNull(secretKey);
+        requireNonNull(iv);
+
+        Map<String, FmcpClient> secretKeyMap = ensureSecretKeyMap(fmcpUrl, secretKey);
+        FmcpClient client = secretKeyMap.get(iv);
+        if (client == null) {
+            synchronized (secretKeyMap) {
+                client = secretKeyMap.get(iv);
+                if (client != null) return client;
+                client = new FmcpClient(fmcpUrl, secretKey, iv);
+                secretKeyMap.put(iv, client);
+            }
+        }
+        return client;
+    }
+
+    private static Map<String, FmcpClient> ensureSecretKeyMap(String fmcpUrl, String secretKey) {
+        Map<String, Map<String, FmcpClient>> urlMap = ensureUrlMap(fmcpUrl);
+        Map<String, FmcpClient> secretKeyMap = urlMap.get(secretKey);
+        if (secretKeyMap == null) {
+            synchronized (urlMap) {
+                secretKeyMap = urlMap.get(secretKey);
+                if (secretKeyMap != null) return secretKeyMap;
+                secretKeyMap = new ConcurrentHashMap<String, FmcpClient>();
+                urlMap.put(secretKey, secretKeyMap);
+            }
+        }
+        return secretKeyMap;
+    }
+
+    private static Map<String, Map<String, FmcpClient>> ensureUrlMap(String fmcpUrl) {
+        Map<String, Map<String, FmcpClient>> urlMap = cache.get(fmcpUrl);
+        if (urlMap == null) {
+            synchronized (cache) {
+                urlMap = cache.get(fmcpUrl);
+                if (urlMap != null) return urlMap;
+                urlMap = new ConcurrentHashMap<String, Map<String, FmcpClient>>();
+                cache.put(fmcpUrl, urlMap);
+            }
+        }
+        return urlMap;
+    }
+
 }

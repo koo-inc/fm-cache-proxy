@@ -18,7 +18,7 @@ public class PutFile {
                 .method("GET")
                 .build();
 
-        FmcpClient client = new FmcpClient(fmcpUrl, secretKey, iv);
+        FmcpClient client = FmcpClient.getInstance(fmcpUrl, secretKey, iv);
         client.put(param, file);
 
         System.out.println(client.getUrl(param));
